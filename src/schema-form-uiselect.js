@@ -38,15 +38,25 @@ angular.module('schemaForm').config(
     schemaFormProvider.defaults.array.unshift(uimultiselect);
 
 
-  //Add to the bootstrap directive
-    schemaFormDecoratorsProvider.addMapping('bootstrapDecorator', 'uiselect',
-    'directives/decorators/bootstrap/uiselect/single.html');
-    schemaFormDecoratorsProvider.createDirective('uiselect',
-    'directives/decorators/bootstrap/uiselect/single.html');
-    schemaFormDecoratorsProvider.addMapping('bootstrapDecorator', 'uimultiselect',
-    'directives/decorators/bootstrap/uiselect/multi.html');
-    schemaFormDecoratorsProvider.createDirective('uimultiselect',
-    'directives/decorators/bootstrap/uiselect/multi.html');
+    //Add to the bootstrap directive
+    schemaFormDecoratorsProvider.addMapping(
+      'bootstrapDecorator',
+      'uiselect',
+      'directives/decorators/bootstrap/uiselect/single.html'
+    );
+    schemaFormDecoratorsProvider.createDirective(
+      'uiselect',
+      'directives/decorators/bootstrap/uiselect/single.html'
+    );
+    schemaFormDecoratorsProvider.addMapping(
+      'bootstrapDecorator',
+      'uimultiselect',
+      'directives/decorators/bootstrap/uiselect/multi.html'
+    );
+    schemaFormDecoratorsProvider.createDirective(
+      'uimultiselect',
+      'directives/decorators/bootstrap/uiselect/multi.html'
+    );
   }])
   .directive("toggleSingleModel", function() {
     // some how we get this to work ...
@@ -149,13 +159,13 @@ angular.module('schemaForm').config(
     };
   })
   .controller('UiSelectController', ['$scope', '$http', function($scope, $http) {
-    
+
     $scope.fetchResult = function (schema, options, search) {
         if(options) {
           if (options.callback) {
               var cb_func = (typeof options.callback == 'function') ?
                   options.callback : new Function(options.callback);
-                  
+
               schema.items = cb_func(schema, options, search);
               console.log('items', schema.items);
           }
@@ -184,7 +194,7 @@ angular.module('schemaForm').config(
           else if (options.async) {
               var cb_func = (typeof options.async.call == 'function') ?
                   options.async.call : new Function(options.async.call);
-                  
+
               return cb_func(schema, options, search).then(
                   function (_data) {
                       schema.items = _data.data;
@@ -195,7 +205,7 @@ angular.module('schemaForm').config(
                           "\nError: "  + status);
                   });
           }
-          
+
         }
     };
   }])
