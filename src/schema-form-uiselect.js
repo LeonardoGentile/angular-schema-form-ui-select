@@ -43,7 +43,7 @@ angular.module('schemaForm').config(
     schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uiselect',
-      'directives/decorators/bootstrap/uiselect/single.html',
+      'directives/decorators/bootstrap/uiselect/single.html'
     );
     // schemaFormDecoratorsProvider.createDirective(
     //   'uiselect',
@@ -52,7 +52,7 @@ angular.module('schemaForm').config(
     schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uimultiselect',
-      'directives/decorators/bootstrap/uiselect/multi.html',
+      'directives/decorators/bootstrap/uiselect/multi.html'
     );
     // schemaFormDecoratorsProvider.createDirective(
     //   'uimultiselect',
