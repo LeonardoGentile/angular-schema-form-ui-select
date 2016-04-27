@@ -1,14 +1,19 @@
-<div ng-init="select_models=(form.schema.items | where : {value: $$value$$})"
+<div
+  ng-init="select_models=(form.schema.items | where : {value: $$value$$})"
   ng-class="{'has-error': hasError(), 'has-success': hasSuccess(), 'has-feedback': form.feedback !== false}"
   class="form-group" >
 
   <label ng-show="showTitle()" class="control-label">{{form.title}}</label>
 
-  <div ng-init="select_model.selected=select_models[0]" class="form-group" >
+  <div
+    ng-controller="UiSelectController"
+    ng-init="select_model.selected=select_models[0]"
+    class="form-group" >
+
+    <!-- Not tagging -->
     <ui-select
       ng-if="!(form.options.tagging||false)"
       ng-model="select_model.selected"
-      ng-controller="UiSelectController"
       ng-disabled="form.disabled"
       theme="bootstrap"
       on-select="$$value$$=$item.value"
@@ -26,19 +31,19 @@
         group-by="form.options.groupBy"
         repeat="item in form.schema.items | propsFilter: {label: $select.search, description: (form.options.searchDescriptions===true ? $select.search : 'NOTSEARCHINGFORTHIS') }"
         class="ui-select-choices" >
-          <div ng-bind-html="item.label | highlight: $select.search"></div>
-          <div ng-if="item.description">
-            <span
-              ng-bind-html="'<small>' + (''+item.description | highlight: (form.options.searchDescriptions===true ? $select.search : 'NOTSEARCHINGFORTHIS'))+ '</small>'">
-            </span>
-          </div>
+        <div ng-bind-html="item.label | highlight: $select.search"></div>
+        <div ng-if="item.description">
+          <span
+            ng-bind-html="'<small>' + (''+item.description | highlight: (form.options.searchDescriptions===true ? $select.search : 'NOTSEARCHINGFORTHIS'))+ '</small>'">
+          </span>
+        </div>
       </ui-select-choices>
 
     </ui-select>
 
+    <!-- tagging & !groupBy -->
     <ui-select
-      ng-if="(form.options.tagging||false) && !(form.options.groupBy || false)"
-      ng-controller="UiSelectController"
+      ng-if="(form.options.tagging||false) && !(form.options.groupBy||false)"
       ng-model="select_model.selected"
       ng-disabled="form.disabled"
       tagging="form.options.tagging||false"
@@ -54,7 +59,6 @@
         {{select_model.selected.label}}&nbsp;<small>{{(select_model.selected.isTag===true ? form.options.taggingLabel : '')}}</small>
       </ui-select-match>
 
-      <!--repeat code because tagging does not display properly under group by but is still useful -->
       <ui-select-choices
         refresh="form.options.refreshMethod(form.schema, $select.search)"
         refresh-delay="form.options.refreshDelay"
@@ -76,10 +80,11 @@
       </ui-select-choices>
     </ui-select>
 
+
+    <!-- tagging & groupBy -->
     <!--repeat code because tagging does not display properly under group by but is still useful -->
     <ui-select
-      ng-if="(form.options.tagging||false) && (form.options.groupBy || false)"
-      ng-controller="UiSelectController"
+      ng-if="(form.options.tagging||false) && (form.options.groupBy||false)"
       ng-model="select_model.selected"
       ng-disabled="form.disabled"
       tagging="form.options.tagging||false"
@@ -113,13 +118,13 @@
           <span ng-bind-html="'<small>' + (''+item.description | highlight: (form.options.searchDescriptions===true ? $select.search : 'NOTSEARCHINGFORTHIS')) + '</small>'"></span>
         </div>
       </ui-select-choices>
-
     </ui-select>
 
-    <input type="hidden"
+    <input
+      type="hidden"
       toggle-single-model
-      sf-changed="form"
       ng-model="insideModel"
+      sf-changed="form"
       schema-validate="form" />
 
     <span

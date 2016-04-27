@@ -2,7 +2,7 @@ angular.module('schemaForm').config(
 ['schemaFormProvider', 'schemaFormDecoratorsProvider', 'sfPathProvider',
   function(schemaFormProvider,  schemaFormDecoratorsProvider, sfPathProvider) {
 
-    var uiselect = function(name, schema, options) {
+    var uiselectString = function(name, schema, options) {
       if (schema.type === 'string' && schema.format == 'uiselect') {
         var f = schemaFormProvider.stdFormObj(name, schema, options);
         f.key  = options.path;
@@ -12,9 +12,9 @@ angular.module('schemaForm').config(
       }
     };
 
-    schemaFormProvider.defaults.string.unshift(uiselect);
+    schemaFormProvider.defaults.string.unshift(uiselectString);
 
-    var uiselect = function(name, schema, options) {
+    var uiselectNumber = function(name, schema, options) {
       if (schema.type === 'number' && schema.format == 'uiselect') {
         var f = schemaFormProvider.stdFormObj(name, schema, options);
         f.key  = options.path;
@@ -24,7 +24,7 @@ angular.module('schemaForm').config(
       }
     };
 
-    schemaFormProvider.defaults.number.unshift(uiselect);
+    schemaFormProvider.defaults.number.unshift(uiselectNumber);
 
     var uimultiselect = function(name, schema, options) {
       if (schema.type === 'array' && schema.format == 'uiselect') {
@@ -38,25 +38,26 @@ angular.module('schemaForm').config(
     schemaFormProvider.defaults.array.unshift(uimultiselect);
 
 
+    // TOFIX: change to the new way: https://github.com/json-schema-form/angular-schema-form/blob/development/docs/extending.md#creating-an-add-on
     //Add to the bootstrap directive
-    schemaFormDecoratorsProvider.addMapping(
+    schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uiselect',
-      'directives/decorators/bootstrap/uiselect/single.html'
+      'directives/decorators/bootstrap/uiselect/single.html',
     );
-    schemaFormDecoratorsProvider.createDirective(
-      'uiselect',
-      'directives/decorators/bootstrap/uiselect/single.html'
-    );
-    schemaFormDecoratorsProvider.addMapping(
+    // schemaFormDecoratorsProvider.createDirective(
+    //   'uiselect',
+    //   'directives/decorators/bootstrap/uiselect/single.html'
+    // );
+    schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uimultiselect',
-      'directives/decorators/bootstrap/uiselect/multi.html'
+      'directives/decorators/bootstrap/uiselect/multi.html',
     );
-    schemaFormDecoratorsProvider.createDirective(
-      'uimultiselect',
-      'directives/decorators/bootstrap/uiselect/multi.html'
-    );
+    // schemaFormDecoratorsProvider.createDirective(
+    //   'uimultiselect',
+    //   'directives/decorators/bootstrap/uiselect/multi.html'
+    // );
   }])
   .directive("toggleSingleModel", function() {
     // some how we get this to work ...
@@ -198,6 +199,8 @@ angular.module('schemaForm').config(
               return cb_func(schema, options, search).then(
                   function (_data) {
                       schema.items = _data.data;
+                      // ugly workaround to set the selected item coming from async calls
+                      $scope.$select.selected = _.findWhere(schema.items, {'selected': true });
                       console.log('items', schema.items);
                   },
                   function (data, status) {
