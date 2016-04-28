@@ -1,6 +1,6 @@
 angular.module('schemaForm').config(
-['schemaFormProvider', 'schemaFormDecoratorsProvider', 'sfPathProvider',
-  function(schemaFormProvider,  schemaFormDecoratorsProvider, sfPathProvider) {
+['schemaFormProvider', 'schemaFormDecoratorsProvider', 'sfPathProvider', 'sfBuilderProvider',
+  function(schemaFormProvider, schemaFormDecoratorsProvider, sfPathProvider, sfBuilderProvider) {
 
     var uiselectString = function(name, schema, options) {
       if (schema.type === 'string' && schema.format == 'uiselect') {
@@ -43,21 +43,16 @@ angular.module('schemaForm').config(
     schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uiselect',
-      'directives/decorators/bootstrap/uiselect/single.html'
+      'directives/decorators/bootstrap/uiselect/single.html',
+      sfBuilderProvider.stdBuilders
     );
-    // schemaFormDecoratorsProvider.createDirective(
-    //   'uiselect',
-    //   'directives/decorators/bootstrap/uiselect/single.html'
-    // );
+
     schemaFormDecoratorsProvider.defineAddOn(
       'bootstrapDecorator',
       'uimultiselect',
-      'directives/decorators/bootstrap/uiselect/multi.html'
+      'directives/decorators/bootstrap/uiselect/multi.html',
+      sfBuilderProvider.stdBuilders
     );
-    // schemaFormDecoratorsProvider.createDirective(
-    //   'uimultiselect',
-    //   'directives/decorators/bootstrap/uiselect/multi.html'
-    // );
   }])
   .directive("toggleSingleModel", function() {
     // some how we get this to work ...
@@ -193,8 +188,8 @@ angular.module('schemaForm').config(
                   });
           }
           else if (options.async) {
-              var cb_func = (typeof options.async.call == 'function') ?
-                  options.async.call : new Function(options.async.call);
+              var cb_func = (typeof options.async == 'function') ?
+                  options.async : new Function(options.async);
 
               return cb_func(schema, options, search).then(
                   function (_data) {
